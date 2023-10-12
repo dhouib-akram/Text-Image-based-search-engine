@@ -55,7 +55,7 @@ def check_url(url):
 def clean_based_on_url(df):
     with Pool(processes=config_utils.num_processes) as pool:
 
-        results = list(pool.imap(check_url, df.OriginalURL[config_utils.start:config_utils.end]), total=len(df.OriginalURL[:10000]))
+        results = list(pool.imap(check_url, df.OriginalURL[config_utils.start:config_utils.end]), total=len(df.OriginalURL[config_utils.start:config_utils.end]))
         results_df = pd.DataFrame(results, columns=['OriginalURL', 'IsWorking'])
 
         # Merge the two DataFrames based on the 'OriginalURL' column
