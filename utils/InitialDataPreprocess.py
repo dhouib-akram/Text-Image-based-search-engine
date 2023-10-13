@@ -4,6 +4,7 @@ import pandas as pd
 import ast
 import numpy as np 
 from multiprocessing import Pool
+import requests
 
 
 def create_merged_dataframe(df_img, df_annot):
@@ -44,18 +45,18 @@ def transform_labels_to_tag(df):
     new.drop(axis=1, columns='LabelName', inplace=True)
     return
 # Function to check if a URL is working
-def is_url_working(url):
+def is_url_working(url: str):
     try:
         response = requests.get(url)
-        return response.status_code != 404
+        return (response.status_code != 404 and response.status_code != 410)
     except requests.exceptions.RequestException:
         return False
-def check_url(url):
+def check_url(url: str):
     return url, is_url_working(url)
 def clean_based_on_url(df):
     with Pool(processes=config_utils.num_processes) as pool:
 
-        results = list(pool.imap(check_url, df.OriginalURL[config_utils.start:config_utils.end]), total=len(df.OriginalURL[config_utils.start:config_utils.end]))
+        results = list(pool.imap(check_url, df.OriginalURL[config_utils.start:config_utils.end]), total=config_utils.end-config_utils.start)
         results_df = pd.DataFrame(results, columns=['OriginalURL', 'IsWorking'])
 
         # Merge the two DataFrames based on the 'OriginalURL' column
