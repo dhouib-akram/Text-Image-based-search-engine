@@ -6,3 +6,4 @@ images_path='/content/drive/MyDrive/SearchEngineData/train-images-with-labels-wi
 merged_df_path='/content/drive/MyDrive/SearchEngineData/data_4M.csv'
 final_path="/content/drive/MyDrive/SearchEngineData/final.csv"
 index_name = "all-images"
+data_path="/"

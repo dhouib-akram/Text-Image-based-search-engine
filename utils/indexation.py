@@ -30,7 +30,7 @@ def add_mapping(client ,index : str)-> None :
     client.indices.put_mapping(index=index,body=mapping)
     return 
 
-def generate_actions(data_path):
+def generate_actions(data_path) -> dict :
     with open(data_path, mode="r") as f:
        reader = csv.DictReader(f)
        for row in reader :          
@@ -45,17 +45,41 @@ def generate_actions(data_path):
           }
           yield doc  
 
-    
+def bulk_data(client,data_path,index) :
+    progress = tqdm.tqdm(unit="docs")
+    successes = 0
+    for success, _ in bulk(client= client,index= index, 
+                          actions = generate_actions(data_path),
+                          chunk_size = 500 ,max_retries =2 ):
+        progress.update(1)
+        successes += success
+    print("Indexed %d documents" % (successes))
+      
 
 
 if __name__ == '__main__':
     import json
+    import tqdm
     import csv
+    import argparse
     import config_utils
     from elasticsearch import Elasticsearch
+    from elasticsearch.helpers import bulk
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--index_name', type=str, default=config_utils.index_name,
+                      help="specify the decoder model")
+    parser.add_argument('--data_path', type=str, default=config_utils.data_path,
+                      help="specify the data path to index")
+    parser.add_argument('--add_mapping', type=str, default="no",
+                      help="add mapping to the elasticsearch index [yes | no]")
+    
+    args = parser.parse_args()
+
     es = Elasticsearch(["http://localhost:9200"])
     #es.cluster.health(wait_for_status='yellow', request_timeout=10)
-    index = config_utils.index_name
+    index = args.index_name
     create_index(client = es,index = index)
-    add_mapping(client = es,index = index)
+    if args.add_mapping == "yes":
+        add_mapping(client = es,index = index)
+    bulk_data(client=es,data_path=args.data_path,index=index)
 
