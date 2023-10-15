@@ -6,7 +6,7 @@ import numpy as np
 from elasticsearch import Elasticsearch
 import search_functions
 app = FastAPI()
-client = Elasticsearch(["http://localhost:9200"])
+client = Elasticsearch(backend_config.elastic_url)
 def check_server(client):
     if client.ping() == False:
         print("Elastic Search Server Is Not Running!")
@@ -19,7 +19,9 @@ async def root():
 async def search_by_text(request:Request):
     content = await request.json()  
     text = content["tags"]
-    return search_functions.get_results_search_by_text(text)
+    search_type = content["type"]
+    show_result = int(content["number"])
+    return search_functions.get_results_search_by_text(text,search_type,show_result)
     
 
 @app.post('/search_by_url/')
