@@ -20,12 +20,9 @@ with my_expander1:
     cols = st.columns(3)
     cols[0].caption('Text options ')
     show_result = cols[1].slider('Show results', 1, 100)
-
     filter=cols[2].selectbox(
       'Filter',
        ('Image', 'Text', 'Text & Image'))
-
-# container_form = st.container()
 
 if  filter == "Text":
     with st.form("my_form"):
@@ -46,8 +43,7 @@ if filter == "Image":
                 sf.search_by_upload_image(uploaded)
             else :
                 st.warning("Please provide an image")
-
-if filter =="Text & Image" :
+if filter == "Text & Image" :
     with st.form("my_form_both"):
         cols = st.columns(2)
         query = st.text_input('Filter by Text : ')
