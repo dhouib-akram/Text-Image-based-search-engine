@@ -19,17 +19,22 @@ my_expander1 = st.expander("Filter", expanded=True)
 with my_expander1:
     cols = st.columns(3)
     cols[0].caption('Text options ')
-    show_result = cols[1].slider('Show results', 1, 100)
+    show_result = cols[1].slider('Show results', 1, 15)
     filter=cols[2].selectbox(
       'Filter',
        ('Image', 'Text', 'Text & Image'))
 
 if  filter == "Text":
     with st.form("my_form"):
-        query = st.text_input('How can we help you?')
+        cols = st.columns([3,1]) 
+        query = cols[0].text_input('How can we help you?')
+        search_type= cols[1].selectbox(
+      'search type',
+       ('fuzzy', 'must'))
+        st.write("")
         submit = st.form_submit_button("Search")
         if submit and query :
-            sf.search_by_text(query)
+            sf.search_by_text(query,search_type,show_result)
 if filter == "Image":
     with st.form("my_form_image"):
         url = st.text_input('Search by image URL')

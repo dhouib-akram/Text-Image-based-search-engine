@@ -8,12 +8,13 @@ from PIL import Image
 from io import BytesIO
 from joblib import load
 import base64
+import backend_config as config
 
 class FeatureExtractor:
     def __init__(self):
         base_model = VGG16(weights='imagenet')
         self.model = Model(inputs=base_model.input, outputs=base_model.get_layer('fc1').output)
-        self.pca = load("pca_model20k.pkl")
+        self.pca = load(config.pca_path)
 
         
 

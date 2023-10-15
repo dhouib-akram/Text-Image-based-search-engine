@@ -7,22 +7,35 @@ from PIL import Image
 import pickle as pkl
 import json
 from feature_extractor import FeatureExtractor
-client = Elasticsearch(["http://localhost:9200"])
+client = Elasticsearch(backend_config.elastic_url)
 fe = FeatureExtractor()
 
-def get_results_search_by_text(query):
+def get_results_search_by_text(query,search_type,show_result):
+        if search_type == "must":
 
-        search_body = {
-            "query": {
-                "bool": {
-                    "must": [
-                        {"match": {"Tags": query}},
-                    ]
-                }
-            },
-            "_source":["OriginalURL","ImageID"]
-        }
-        results=client.search(index=backend_config.index_name, body=search_body)
+            search_body = {
+                "query": {
+                    "bool": {
+                        "must": [
+                            {"match": {"Tags": query}},
+                        ]
+                    }
+                },
+                "_source":["OriginalURL","ImageID","Tags"]
+            }
+            
+        elif search_type == "fuzzy":
+            search_body = {
+                "query": {
+                        "fuzzy": {
+                        "Tags": {
+                            "value": query
+                            }
+                        }
+                            },
+                            "_source":["OriginalURL","ImageID","Tags"]
+                        }
+        results=client.search(index=backend_config.index_name, body=search_body,size=int(show_result))
         return{"resulttype":results}
 
 def get_results_search_by_url(url):
