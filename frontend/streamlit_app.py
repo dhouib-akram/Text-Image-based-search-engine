@@ -1,8 +1,11 @@
 import streamlit as st
 import numpy as np
-import PIL
+from PIL import Image
 import re
-from st_functions import st_button , load_bootstrap , header
+from io import BytesIO
+
+from st_templates import st_button , load_bootstrap , header , footer
+import st_functions as sf
 import frontend_config
 def is_valid_url(url):
     url_pattern = r'https?://\S+'
@@ -11,11 +14,6 @@ load_bootstrap()
 st_button('github', frontend_config.github, 'Check Our Github Repository', 20)
 header()
 
-
-def search_by_image():
-    pass
-def search_by_image_and_text():
-    pass
 container = st.container()
 my_expander1 = st.expander("Filter", expanded=True)
 with my_expander1:
@@ -33,15 +31,19 @@ if  filter == "Text":
     with st.form("my_form"):
         query = st.text_input('How can we help you?')
         submit = st.form_submit_button("Search")
-
+        if submit and query :
+            sf.search_by_text(query)
 if filter == "Image":
     with st.form("my_form_image"):
         url = st.text_input('Search by image URL')
         uploaded_file = st.file_uploader("Upload a file", type=["png", "jpg"])
         submit = st.form_submit_button("Search")
         if submit :
-            if is_valid_url(url) or uploaded_file:
-                search_by_image()   
+            if is_valid_url(url):
+                sf.search_by_url(url)   
+            elif uploaded_file: 
+                uploaded = uploaded_file.read()
+                sf.search_by_upload_image(uploaded)
             else :
                 st.warning("Please provide an image")
 
@@ -56,6 +58,8 @@ if filter =="Text & Image" :
         submit = st.form_submit_button("Search")
         if submit :
             if is_valid_url(url) or uploaded_file:
-                search_by_image_and_text()   
+                sf.search_by_image_and_text(uploaded = uploaded_file.read(),query=query)   
             else :
                 st.warning("Please provide an image")
+
+footer()

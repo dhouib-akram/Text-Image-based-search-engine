@@ -1,7 +1,7 @@
 
 
 def create_index(client ,index : str)-> None :
-   if not client.indicclient.exists(index=index):
+   if not client.indices.exists(index=index):
     client.indices.create(index=index)
    return
 
@@ -10,55 +10,49 @@ def add_mapping(client ,index : str)-> None :
     "dynamic": False,
     "properties": {
         "ImageID  ": { "type": "keyword" },
-        "featureVec": {
-            "type": "elastiknn_dense_float_vector",
-            "elastiknn": {
-                "dims": 785,
-                "model": "lsh",
-                "similarity": "l2",
-                "L": 60,
-                "k": 3,
-                "w": 2
-            }
-        },
+        "FeatureVector": {
+            "type": "dense_vector",
+            "dims": 786,
+            "index": True,
+            "similarity": "l2_norm",
+            },
         "Title": { "type": "text" },
         "Author": { "type": "text","index":False},
         "Tags": { "type": "text" },
         "OriginalURL":{"type":"text","index":False}
-  }
-}   
+  }}
+  
     client.indices.put_mapping(index=index,body=mapping)
     return 
 
-def generate_actions(data_path) -> dict :
-    with open(data_path, mode="r") as f:
+def generate_actions(index,data_path) -> dict :
+    with open(data_path, mode="r",encoding='utf-8') as f:
        reader = csv.DictReader(f)
-       for row in reader :          
+       for row in reader :   
+          feature_vector_str = row["FeatureVector"]
+          feature_vector_list = json.loads(feature_vector_str)   
           doc = {
              '_id': row["ImageID"],
+             "_index": index,
              'ImageID': row["ImageID"],
-             'OriginalURL' : row["ImageID"],
+             'OriginalURL' : row["OriginalURL"],
              'Author' : row["Author"],
              'Title' : row["Title"],
              'Tags' : row["Tags"],
-             #featureVec : row of list 
+             'FeatureVector' : feature_vector_list
           }
           yield doc  
 
 def bulk_data(client,data_path,index) :
-    progress = tqdm.tqdm(unit="docs")
-    successes = 0
-    for success, _ in bulk(client= client,index= index, 
-                          actions = generate_actions(data_path),
-                          chunk_size = 500 ,max_retries =2 ):
-        progress.update(1)
-        successes += success
-    print("Indexed %d documents" % (successes))
+    bulk(client= client,actions = generate_actions(index,data_path),
+                          chunk_size = 500 , max_retries =2)
       
-
+    client.indices.refresh(index=index)
+    client.indices.forcemerge(index=index, max_num_segments=1, request_timeout=1200)
 
 if __name__ == '__main__':
     import json
+    import numpy as np
     import tqdm
     import csv
     import argparse
@@ -83,3 +77,4 @@ if __name__ == '__main__':
         add_mapping(client = es,index = index)
     bulk_data(client=es,data_path=args.data_path,index=index)
 
+#python indexation.py --data_path "path" --add_mapping no
