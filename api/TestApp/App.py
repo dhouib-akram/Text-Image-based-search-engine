@@ -28,16 +28,10 @@ async def search_by_url(request: Request):
     content = await request.json()
     
     url = content["url"]
+    furry=content["fuzzy"]
 
-    return sf.get_results_search_by_url(url)
-@app.post('/search_by_img/')
+    return sf.get_results_search_by_url(url,furry)
 
-async def search_by_img(request: Request):
-    content = await request.json()
-    
-    url = content["url"]
-
-    return sf.get_results_search_by_url(url)
 
 if __name__ == "__main__":
     import uvicorn
