@@ -19,7 +19,8 @@ def get_results_search_by_text(query):
                         {"match": {"Tags": query}},
                     ]
                 }
-            }
+            },
+            "_source":["OriginalURL","ImageID"]
         }
         results=client.search(index=backend_config.index_name, body=search_body)
         return{"resulttype":results}
