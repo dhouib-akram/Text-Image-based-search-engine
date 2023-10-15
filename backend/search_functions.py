@@ -35,7 +35,7 @@ def get_results_search_by_text(query,search_type,show_result):
                             },
                             "_source":["OriginalURL","ImageID","Tags"]
                         }
-        results=client.search(index=backend_config.index_name, body=search_body,size=int(show_result))
+        results=client.search(index=backend_config.index_name, body=search_body,size=show_result)
         return{"resulttype":results}
 
 def get_results_search_by_url(url):
@@ -64,22 +64,40 @@ def get_results_search_by_image(img):
     }
     results =  client.search(index=backend_config.index_name, body=body)
     return{"resulttype":results}
-def get_results_search_by_image_and_text(img,query):
+def get_results_search_by_image_and_text(img,query,search_type,show_result):
     image_feature= fe.get_from_image(img)
-    body = {
+    if search_type=="multi_match":
+        body = {
 
-            
-                "knn": {
-                    "field": "FeatureVector",
-                    "query_vector": image_feature,
-                    "k": 10,
-                    "num_candidates": 100,
-                    "filter": {
-                        "multi_match": {
-                        "query": query,
-                        "fields":["Tags","Title"]
-                    },
-            }
-    }}
-    results =  client.search(index=backend_config.index_name, body=body)
+                
+                    "knn": {
+                        "field": "FeatureVector",
+                        "query_vector": image_feature,
+                        "k": 10,
+                        "num_candidates": 100,
+                        "filter": {
+                            "multi_match": {
+                            "query": query,
+                            "fields":["Tags","Title"]
+                        },
+                }
+        }}
+    else :
+         body = {
+
+                
+                    "knn": {
+                        "field": "FeatureVector",
+                        "query_vector": image_feature,
+                        "k": 10,
+                        "num_candidates": 100,
+                        "filter": {
+                            "multi_match": {
+                            "query": query,
+                            "fields":["Tags","Title"],
+                            "fuzziness": "AUTO"
+                        },
+                }
+        }}
+    results =  client.search(index=backend_config.index_name, body=body,size=show_result)
     return{"resulttype":results}
