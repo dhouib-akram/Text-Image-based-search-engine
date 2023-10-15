@@ -6,7 +6,7 @@ import cv2
 from skimage import io
 
 class FeatureExtractor:
-    def __init__(self, pca_path: str):
+    def __init__(self):
         base_model = VGG16(weights='imagenet')
         self.model = Model(inputs=base_model.input, outputs=base_model.get_layer('fc1').output)
         
@@ -16,7 +16,7 @@ class FeatureExtractor:
         x = image.img_to_array(img)  
         x = np.expand_dims(x, axis=0)
         x = preprocess_input(x)
-        feature = self.model.predict(x)[0]
+        feature = self.model.predict(x)
         return feature / np.linalg.norm(feature)
     
     def get_features_from_link(self, img_link: str):
