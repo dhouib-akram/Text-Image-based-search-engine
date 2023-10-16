@@ -6,8 +6,9 @@ from io import BytesIO
 from PIL import Image
 import pickle as pkl
 import json
+import backend_config as config
 from feature_extractor import FeatureExtractor
-client = Elasticsearch(backend_config.elastic_url)
+client = Elasticsearch([backend_config.elastic_url],http_auth=(config.elastic_usr, config.elastic_pass))
 fe = FeatureExtractor()
 
 def get_results_search_by_text(query,search_type,show_result):
