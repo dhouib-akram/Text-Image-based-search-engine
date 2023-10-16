@@ -18,7 +18,7 @@ container = st.container()
 my_expander1 = st.expander("Filter", expanded=True)
 with my_expander1:
     cols = st.columns(3)
-    cols[0].caption('Text options ')
+    cols[0].caption('Search options ')
     show_result = cols[1].slider('Show results', 1, 15)
     filter=cols[2].selectbox(
       'Filter',
