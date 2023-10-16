@@ -15,3 +15,9 @@ services:
     volumes:
       - ./elasticsearch/config/elasticsearch.yml:/etc/elasticsearch/elasticsearch.yml
       - ./elasticsearch/data:/usr/share/elasticsearch/data     
+      
+  frontend:
+    build: 
+      context: ./frontend
+    ports:
+      - "8501:8501"
