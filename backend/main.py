@@ -5,8 +5,9 @@ from PIL import Image
 import numpy as np
 from elasticsearch import Elasticsearch
 import search_functions
+import backend_config as config 
 app = FastAPI()
-client = Elasticsearch(backend_config.elastic_url)
+client = Elasticsearch([backend_config.elastic_url],http_auth=(config.elastic_usr, config.elastic_pass))
 def check_server(client):
     if client.ping() == False:
         print("Elastic Search Server Is Not Running!")

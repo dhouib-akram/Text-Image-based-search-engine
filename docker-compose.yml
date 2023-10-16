@@ -1,5 +1,5 @@
 version: '2'
-services:
+servicwes:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.8.2
     container_name: elasticsearch
@@ -21,3 +21,11 @@ services:
       context: ./frontend
     ports:
       - "8501:8501"
+  fastapui:
+    build: 
+      context: ./backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - elasticsearch
+ 
