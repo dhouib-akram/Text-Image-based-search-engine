@@ -18,7 +18,7 @@ container = st.container()
 my_expander1 = st.expander("Filter", expanded=True)
 with my_expander1:
     cols = st.columns(3)
-    cols[0].caption('Text options ')
+    cols[0].caption('Search options ')
     show_result = cols[1].slider('Show results', 1, 15)
     filter=cols[2].selectbox(
       'Filter',
@@ -50,8 +50,11 @@ if filter == "Image":
                 st.warning("Please provide an image")
 if filter == "Text & Image" :
     with st.form("my_form_both"):
-        cols = st.columns(2)
-        query = st.text_input('Filter by Text : ')
+        cols = st.columns([2,2]) 
+        query = cols[0].text_input('Filter by text')
+        search_type= cols[1].selectbox(
+      'search type',
+       ('fuzzy', 'multi_match'))
         with cols[0]:
             st.write("Provide URL or Browse Image")
             url = st.text_input("Search by URL : ")
@@ -59,7 +62,7 @@ if filter == "Text & Image" :
         submit = st.form_submit_button("Search")
         if submit :
             if is_valid_url(url) or uploaded_file:
-                sf.search_by_image_and_text(uploaded = uploaded_file.read(),query=query)   
+                sf.search_by_image_and_text(uploaded = uploaded_file.read(),query=query,search_type=search_type,show_result=show_result)   
             else :
                 st.warning("Please provide an image")
 
