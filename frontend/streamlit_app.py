@@ -30,7 +30,7 @@ if  filter == "Text":
         query = cols[0].text_input('How can we help you?')
         search_type= cols[1].selectbox(
       'search type',
-       ('fuzzy', 'must'))
+       ('fuzzy', 'match'))
         st.write("")
         submit = st.form_submit_button("Search")
         if submit and query :

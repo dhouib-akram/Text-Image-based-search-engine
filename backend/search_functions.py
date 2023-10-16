@@ -67,74 +67,82 @@ def get_results_search_by_image(img):
 def get_results_search_by_image_and_text(img,query,search_type,show_result):
     image_feature= fe.get_from_image(img)
     if search_type=="multi_match":
-        body={
-                "query": {
-                    "function_score": {
-                    "query": {
-                        "bool": {
-                        "should": [
-                            {
-                            "multi_match": {
-                                "query": query,
-                                "fields": ["Tags", "Title"],
-                                "fuzziness": "AUTO"
-                            }
-                            }
-                        ]
-                        }
+        body = {
+
+            
+                "knn": {
+                    "field": "FeatureVector",
+                    "query_vector": image_feature,
+                    "k": show_result,
+                    "num_candidates": 100,
+                    "filter": {
+                        "multi_match": {
+                        "query": query,
+                        "fields":["Tags","Title"],
+                        
                     },
-                    "functions": [
-                        {
-                        "script_score": {
-                            "script": {
-                            "source": "5 / (1 + l2norm(params.queryVector, doc['FeatureVector']) )",
-                            "params": {
-                                "queryVector": image_feature
-                            }
-                            }
-                        }
-                        }
-                    ],
-                    "score_mode": "sum"  
-                    }
-                }
-                }
+            }
+    }}
   
         
        
     else :
-         body={
+        body ={
+              
+                "knn": {
+                    "field": "FeatureVector",
+                    "query_vector": image_feature,
+                    "k": show_result,
+                    "num_candidates": 100,
+                  
+    },
                 "query": {
-                    "function_score": {
-                    "query": {
-                        "bool": {
-                        "should": [
-                            {
-                            "multi_match": {
-                                "query": query,
-                                "fields": ["Tags", "Title"],
-                                "fuzziness": "AUTO"
-                            }
-                            }
-                        ]
-                        }
-                    },
-                    "functions": [
-                        {
-                        "script_score": {
-                            "script": {
-                            "source": "5 / (1 + l2norm(params.queryVector, doc['FeatureVector']) )",
-                            "params": {
-                                "queryVector": image_feature
-                            }
+                        "fuzzy": {
+                        "Tags": {
+                            "value": query
                             }
                         }
-                        }
-                    ],
-                    "score_mode": "sum"  
-                    }
-                }
-                }
+                            }
+           
+    }
+
+            
+
+
+
+
+#    body={
+#                 "query": {
+#                     "function_score": {
+#                     "query": {
+#                         "bool": {
+#                         "should": [
+#                             {
+#                             "multi_match": {
+#                                 "query": query,
+#                                 "fields": ["Tags", "Title"],
+#                                 "fuzziness": "AUTO"
+#                             }
+#                             }
+#                         ]
+#                         }
+#                     },
+#                     "functions": [
+#                         {
+#                         "script_score": {
+#                             "script": {
+#                             "source": "5 / (1 + l2norm(params.queryVector, doc['FeatureVector']) )",
+#                             "params": {
+#                                 "queryVector": image_feature
+#                             }
+#                             }
+#                         }
+#                         }
+#                     ],
+#                     "score_mode": "sum"  
+#                     }
+#                 }
+#                 }
 
     results =  client.search(index=backend_config.index_name, body=body,size=show_result)
     return{"resulttype":results}
