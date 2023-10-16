@@ -41,7 +41,9 @@ async def get_feature_from_url(request: Request):
     content = await request.json()
     img = content["img"]
     query =content["query"]
-    return search_functions.get_results_search_by_image_and_text(img,query)
+    search_type = content["type"]
+    show_result = int(content["number"])
+    return search_functions.get_results_search_by_image_and_text(img,query,search_type,show_result)
 if __name__ == "_main_":
     import uvicorn
     check_server(client)

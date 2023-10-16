@@ -32,12 +32,12 @@ def search_by_url(link):
     response = requests.post(url,json=json)
     display_image(response)
 
-def search_by_image_and_text(query,uploaded):
+def search_by_image_and_text(query,uploaded,search_type,show_result):
     
     base_url = frontend_config.base_url
     url = base_url + '/search_by_image_and_text/'
     image_base64 = base64.b64encode(uploaded).decode('utf-8')
-    json = {'img': image_base64, "query":query}
+    json = {'img': image_base64, "query":query,"type":search_type,"number":show_result}
     response = requests.post(url,json=json)
     display_image(response)
 def search_by_upload_image(uploaded):
