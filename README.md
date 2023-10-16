@@ -2,7 +2,7 @@
 
 This is an image search engine that allows users to perform image-based, text-based, or combined searches.
 
-![Streamlit Interface](image/streamlit.png)
+![Streamlit Interface](images/streamlit.png)
 
 ## Overview
 
