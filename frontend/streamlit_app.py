@@ -1,8 +1,7 @@
 import streamlit as st
 import numpy as np
-from PIL import Image
 import re
-from io import BytesIO
+
 
 from st_templates import st_button , load_bootstrap , header , footer
 import st_functions as sf
