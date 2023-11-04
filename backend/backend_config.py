@@ -1,5 +1,5 @@
 index_name = "all-images"
-elastic_url="https://34f6-196-203-181-122.ngrok-free.app:443"
+elastic_url="http://localhost:9200"
 pca_path="pca_model20k.pkl"
 elastic_usr="elastic"
 elastic_pass="souak"

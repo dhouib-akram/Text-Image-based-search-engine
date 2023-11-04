@@ -24,7 +24,7 @@ def header():
             </svg>
             Content Based Search Engine
         </h1>
-        <p style="margin-left:12em;"><b>Done by : Soulaimene Turki & Akram Dhouib</b></p>
+        <p style="margin-left:12em;">Done by : Soulaimene Turki & Akram Dhouib</b></p>
     '''
     return st.markdown(header, unsafe_allow_html=True)
 
@@ -36,7 +36,6 @@ def header():
             </svg>
             Content Based Search Engine
         </h1>
-        <p style="margin-left:12em;"><b>Done by : Soulaimene Turki & Akram Dhouib</b></p>
     '''
     return st.markdown(header, unsafe_allow_html=True)
 
@@ -45,3 +44,15 @@ def footer():
         <p style="margin-left:12em;"><b>Done by : Soulaimene Turki & Akram Dhouib</b></p>
     '''
     return st.markdown(footer, unsafe_allow_html=True)
+
+def how_to_use():
+    how_to_use = f''' 
+        <h3> How to use the Application</h3>
+
+        1) Start by choosing a search filter, which can be either **Text, Image, or Text & Image.** This filter determines the type of results you'll receive.
+
+        2) After selecting the filter, use the "Show Results" slider to specify how many results you want to be displayed. Adjust the slider to set your desired result count.
+
+        3) Click the "Search" button to initiate the search. The application will then start fetching and rendering the results.
+    '''
+    return st.sidebar.markdown(how_to_use,unsafe_allow_html=True)
