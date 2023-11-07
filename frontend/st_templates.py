@@ -1,12 +1,18 @@
 import streamlit as st
+
+
 def load_bootstrap():
     with open("style.css") as f:
-        st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
-    st.markdown('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">', unsafe_allow_html=True)
+        st.markdown("<style>{}</style>".format(f.read()), unsafe_allow_html=True)
+    st.markdown(
+        '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">',
+        unsafe_allow_html=True,
+    )
 
-def st_button(icon,url,label,iconsize):
-    if icon == 'github':
-        button_code = f'''
+
+def st_button(icon, url, label, iconsize):
+    if icon == "github":
+        button_code = f"""
         <p>
             <a href={url} class="btn btn-outline-info btn-lg  " type="button" aria-pressed="false">
                 <svg xmlns="http://www.w3.org/2000/svg" width="{iconsize}" height="{iconsize}   " fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
@@ -14,45 +20,23 @@ def st_button(icon,url,label,iconsize):
                 </svg>
                 {label}
             </a>
-        </p>'''
+        </p>"""
     return st.sidebar.markdown(button_code, unsafe_allow_html=True)
-def header():
-    header = f'''
-        <h1 style="margin-left: 2em;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-            </svg>
-            Content Based Search Engine
-        </h1>
-        <p style="margin-left:12em;">Done by : Soulaimene Turki & Akram Dhouib</b></p>
-    '''
-    return st.markdown(header, unsafe_allow_html=True)
+
 
 def header():
-    header = f'''
+    header = f"""
         <h1 style="margin-left: 2em;">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
             </svg>
             Content Based Search Engine
-        </h1>
-    '''
+        </h1>"""
     return st.markdown(header, unsafe_allow_html=True)
+
 
 def footer():
-    footer = f'''
+    footer = f"""
         <p style="margin-left:12em;"><b>Done by : Soulaimene Turki & Akram Dhouib</b></p>
-    '''
+    """
     return st.markdown(footer, unsafe_allow_html=True)
-
-def how_to_use():
-    how_to_use = f''' 
-        <h3> How to use the Application</h3>
-
-        1) Start by choosing a search filter, which can be either **Text, Image, or Text & Image.** This filter determines the type of results you'll receive.
-
-        2) After selecting the filter, use the "Show Results" slider to specify how many results you want to be displayed. Adjust the slider to set your desired result count.
-
-        3) Click the "Search" button to initiate the search. The application will then start fetching and rendering the results.
-    '''
-    return st.sidebar.markdown(how_to_use,unsafe_allow_html=True)
