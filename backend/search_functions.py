@@ -8,7 +8,7 @@ import pickle as pkl
 import json
 import backend_config as config
 from feature_extractor import FeatureExtractor
-client = Elasticsearch([backend_config.elastic_url],http_auth=(config.elastic_usr, config.elastic_pass))
+client = Elasticsearch([backend_config.elastic_url],basic_auth=(config.elastic_usr, config.elastic_pass))
 fe = FeatureExtractor()
 
 def get_results_search_by_text(query,search_type,show_result):
@@ -95,15 +95,13 @@ def get_results_search_by_image_and_text(img,query,search_type,show_result):
                     "query_vector": image_feature,
                     "k": show_result,
                     "num_candidates": 100,
-                  
-    },
-                "query": {
-                        "fuzzy": {
-                        "Tags": {
-                            "value": query
-                            }
-                        }
-                            }
+                  "filter": {
+                        "multi_match": {
+                        "query": query,
+                        "fields":["Tags","Title"],
+                        "fuzziness": "AUTO"
+                        
+                    },}}
            
     }
 
