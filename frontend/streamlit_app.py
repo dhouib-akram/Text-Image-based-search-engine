@@ -3,7 +3,7 @@ import time
 import re
 
 
-from st_templates import st_button, load_bootstrap, header, footer, how_to_use
+from st_templates import st_button, load_bootstrap, header, footer
 import st_functions as sf
 import frontend_config
 
@@ -16,7 +16,7 @@ def is_valid_url(url):
 load_bootstrap()
 st_button("github", frontend_config.github, "Check Our Github Repository", 20)
 header()
-how_to_use()
+
 container = st.container()
 my_expander1 = st.expander("Filter", expanded=True)
 with my_expander1:
@@ -63,7 +63,7 @@ if filter == "Image":
                 st.toast("Time taken: {} seconds".format(elapsed_time_str))
             else:
                 st.warning("Please provide an image")
-                
+
 if filter == "Text & Image":
     with st.form("my_form_both"):
         cols = st.columns([2, 2])
