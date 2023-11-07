@@ -69,7 +69,7 @@ if __name__ == '__main__':
     
     args = parser.parse_args()
 
-    es = Elasticsearch(["http://localhost:9200"])
+    es = Elasticsearch("http://localhost:9200",basic_auth=("elastic", "souak"))
     #es.cluster.health(wait_for_status='yellow', request_timeout=10)
     index = args.index_name
     create_index(client = es,index = index)

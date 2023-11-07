@@ -1,6 +1,7 @@
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.vgg16 import VGG16, preprocess_input
 from tensorflow.keras.models import Model
+from keras.layers import Dense
 import numpy as np
 import cv2
 from skimage import io
@@ -8,7 +9,9 @@ from skimage import io
 class FeatureExtractor:
     def __init__(self):
         base_model = VGG16(weights='imagenet')
-        self.model = Model(inputs=base_model.input, outputs=base_model.get_layer('fc1').output)
+        output_from_base_model = base_model.get_layer('fc1').output
+        new_layer = Dense(765, activation='relu')(output_from_base_model)
+        self.model = Model(inputs=base_model.input, outputs=new_layer)
         
 
     def _extract(self, img):

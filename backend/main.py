@@ -7,7 +7,7 @@ from elasticsearch import Elasticsearch
 import search_functions
 import backend_config as config 
 app = FastAPI()
-client = Elasticsearch([backend_config.elastic_url],http_auth=(config.elastic_usr, config.elastic_pass))
+client = Elasticsearch([backend_config.elastic_url])
 def check_server(client):
     if client.ping() == False:
         print("Elastic Search Server Is Not Running!")
@@ -29,13 +29,15 @@ async def search_by_text(request:Request):
 async def get_feature_from_url(request: Request):
     content = await request.json()
     url = content["url"]
-    return search_functions.get_results_search_by_url(url)
+    show_result = int(content["number"])
+    return search_functions.get_results_search_by_url(url,show_result)
 
 @app.post('/search_by_image/')
 async def get_feature_from_url(request: Request):
     content = await request.json()
     img = content["img"]
-    return search_functions.get_results_search_by_image(img)
+    show_result = int(content["number"])
+    return search_functions.get_results_search_by_image(img,show_result)
 
 @app.post('/search_by_image_and_text/')
 async def get_feature_from_url(request: Request):

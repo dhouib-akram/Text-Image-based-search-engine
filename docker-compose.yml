@@ -1,31 +1,17 @@
 version: '2'
-servicwes:
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.2
-    container_name: elasticsearch
-    ports: 
-      - "9200:9200"
-    environment:
-      - ELASTIC_PASSWORD=souak     
-      - discovery.type=single-node
-      - xpack.security.enabled=true
-      - path.data=/usr/share/elasticsearch/data
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    volumes:
-      - ./elasticsearch/config/elasticsearch.yml:/etc/elasticsearch/elasticsearch.yml
-      - ./elasticsearch/data:/usr/share/elasticsearch/data     
-      
+services:    
   frontend:
     build: 
       context: ./frontend
     ports:
       - "8501:8501"
-  fastapui:
+    depends_on:
+      - fastapi
+  fastapi:
     build: 
       context: ./backend
     ports:
       - "8000:8000"
-    depends_on:
-      - elasticsearch
+    
+
  

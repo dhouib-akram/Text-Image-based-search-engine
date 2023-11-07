@@ -3,4 +3,8 @@ withPCA.csv
 backend/pca_model10k.pkl
 backend/pca_model20k.pkl
 backend/__pycache__
+frontend/__pycache__
+utils/__pycache__
 elasticsearch/data
+utils/final.csv
+utils/saving2.csv 

@@ -1,9 +1,10 @@
 import streamlit as st
 import numpy as np
+import time
 import re
 
 
-from st_templates import st_button , load_bootstrap , header , footer
+from st_templates import st_button , load_bootstrap , header , footer , how_to_use
 import st_functions as sf
 import frontend_config
 def is_valid_url(url):
@@ -12,7 +13,7 @@ def is_valid_url(url):
 load_bootstrap()
 st_button('github', frontend_config.github, 'Check Our Github Repository', 20)
 header()
-
+how_to_use()
 container = st.container()
 my_expander1 = st.expander("Filter", expanded=True)
 with my_expander1:
@@ -33,7 +34,12 @@ if  filter == "Text":
         st.write("")
         submit = st.form_submit_button("Search")
         if submit and query :
+            start_time = time.time()
             sf.search_by_text(query,search_type,show_result)
+            end_time = time.time()
+            elapsed_time = end_time-start_time
+            elapsed_time_str = "{:.3f}".format(elapsed_time)
+            st.toast("Time taken: {} seconds".format(elapsed_time_str))
 if filter == "Image":
     with st.form("my_form_image"):
         url = st.text_input('Search by image URL')
@@ -41,10 +47,20 @@ if filter == "Image":
         submit = st.form_submit_button("Search")
         if submit :
             if is_valid_url(url):
-                sf.search_by_url(url)   
+                start_time = time.time()
+                sf.search_by_url(url,show_result)  
+                end_time = time.time()
+                elapsed_time = end_time-start_time
+                elapsed_time_str = "{:.3f}".format(elapsed_time)
+                st.toast("Time taken: {} seconds".format(elapsed_time_str)) 
             elif uploaded_file: 
                 uploaded = uploaded_file.read()
-                sf.search_by_upload_image(uploaded)
+                start_time = time.time()
+                sf.search_by_upload_image(uploaded,show_result)
+                end_time = time.time()
+                elapsed_time = end_time-start_time
+                elapsed_time_str = "{:.3f}".format(elapsed_time)
+                st.toast("Time taken: {} seconds".format(elapsed_time_str))
             else :
                 st.warning("Please provide an image")
 if filter == "Text & Image" :
@@ -61,7 +77,12 @@ if filter == "Text & Image" :
         submit = st.form_submit_button("Search")
         if submit :
             if is_valid_url(url) or uploaded_file:
+                start_time = time.time()
                 sf.search_by_image_and_text(uploaded = uploaded_file.read(),query=query,search_type=search_type,show_result=show_result)   
+                end_time = time.time()
+                elapsed_time = end_time-start_time
+                elapsed_time_str = "{:.3f}".format(elapsed_time)
+                st.toast("Time taken: {} seconds".format(elapsed_time_str))
             else :
                 st.warning("Please provide an image")
 
